@@ -1,3 +1,4 @@
+my-connection-string.R
 *.aux
 *.bbl
 *.blg
@@ -25,3 +26,5 @@
 *.maf
 *.mtc
 *.mtc0
+.Rproj.user
+.Rhistory
