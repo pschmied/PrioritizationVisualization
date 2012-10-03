@@ -1,0 +1,267 @@
+%!TEX TS-program = lualatex
+%!TEX encoding = UTF-8 Unicode
+%! program = lualatex
+
+%%%%% DOCUMENT SETUP %%%%%
+% Document class derives from "memoir" class
+%\documentclass[10pt, letterpaper, final, twoside, onecolumn, article]{memoir}% For most reports; chapters look like section headers
+\documentclass[10pt, letterpaper, final, twoside, onecolumn]{memoir}% For book-like reports with separate chapters
+
+% Useful packages
+\usepackage{psrc}
+\usepackage{lipsum}
+\usepackage{soul}
+\usepackage{datetime}
+%\usepackage{pgfplots}
+\usepackage{pdflscape} % for landscape pages
+\usepackage{longtable}
+%\usepackage[notes,strict,backend=bibtex8,babel=other,bibencoding=inputenc,doi=false,isbn=false,url=false]{biblatex-chicago}% Chicago bibliography
+
+
+% Define our harvey balls
+\input{harveyballs.tex}
+
+\title{Scorecard-Based Prioritization of Projects in \\Transportation 2040: Report}
+\author{}
+%\date{September, 2012}
+
+%\bibliography{PSRC} %Wouldn't a curated, agency-wide bibliography database be swell?
+
+\begin{document}
+\maketitle
+
+\tableofcontents % Want a table of contents?
+%\listoffiguges % I heard you liked these.
+%\listoftables % Can't have one without the other!
+%%%%% BEGIN DOCUMENT %%%%%
+
+\chapter{Introduction}
+\lipsum[1]
+
+\section{Foo}
+\lipsum[2]
+
+\section{Bar}
+\lipsum[3-4]
+
+\chapter{Form Response Status}
+At the time of this report (\today \ at \currenttime), the status of projects in the sponsor form database are as follows.
+
+
+\begin{table}[htdp]
+\caption{Projects by scorecard reporting status}
+\begin{center}
+\begin{tabularx}{0.35\textwidth}{>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\toprule
+
+\input{tables/projects_by_status.tex}
+
+\end{tabularx}
+\end{center}
+\label{tb:projects_by_status}
+\end{table}%
+
+
+\begin{table}[htdp]
+\scriptsize %small, but better than breaking across page boundaries.
+\caption{Project status by jurisdiction}
+\begin{center}
+\begin{tabularx}{0.5\textwidth}{>{\raggedright\arraybackslash}p{8pc}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+\toprule
+
+\input{tables/projects_by_jurisdiction.tex}
+
+\end{tabularx}
+\end{center}
+\label{tb:projects_by_jurisdiction}
+\end{table}%
+
+
+ 
+\chapter{Scoring results}
+\lipsum[1-2]
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/distribution_by_score}
+
+\caption{Distribution of projects by score}
+\label{fig:distribution_by_score}
+\end{center}
+\end{figure}
+
+
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/projects_by_cats_and_score}
+
+\caption{A none-too-useful plot showing the near perfect linear relationship between project score and the number of categories in which the project received points}
+\label{fig:projects_by_cats_and_score}
+\end{center}
+\end{figure}
+
+
+
+ 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/projects_by_score_by_scorecard}
+
+\caption{Distribution of projects by score and by scorecard}
+\label{fig:projects_by_score_by_scorecard}
+\end{center}
+\end{figure}
+
+
+%%%% Enter landscape mode to make room for wide tables
+\clearpage
+\begin{landscape}
+\pagestyle{empty}
+
+
+%%%% Non-motorized projects
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}}
+
+\caption{ Non-motorized projects} \\
+
+\toprule
+
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endfirsthead
+
+\toprule
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\input{tables/tallies_z_nonmotor.tex}
+
+\end{longtable}}
+
+
+
+
+%%%% Transit and ferry projects
+\clearpage
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}}
+
+\caption{Transit \& ferry projects} \\
+
+\toprule
+
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endfirsthead
+
+\toprule
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\input{tables/tallies_z_transit.tex}
+
+\end{longtable}}
+
+
+
+
+
+%%%% Arterial projects
+\clearpage
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}}
+
+\caption{Arterial roadway projects} \\
+
+\toprule
+
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endfirsthead
+
+\toprule
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\input{tables/tallies_z_arterial.tex}
+
+\end{longtable}}
+
+
+%%%% Projects on state routes
+\clearpage
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}}
+
+\caption{Projects on state routes} \\
+
+\toprule
+
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endfirsthead
+
+\toprule
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\input{tables/tallies_z_stateroute.tex}
+
+\end{longtable}}
+
+
+
+%%%% Projects of unknown category
+%\clearpage  %There are so few, let's not waste another page.
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.9pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}>{\raggedright\arraybackslash}p{3.5pc}}
+
+\caption{Projects of unknown category} \\
+
+\toprule
+
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endfirsthead
+
+\toprule
+ProjectID & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Access to Opportunity & Support for Centers & Travel & TotalScore \\ \midrule
+\endhead
+
+\bottomrule
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\input{tables/tallies_z_unknown.tex}
+
+\end{longtable}}
+
+
+%%%% Exit landscape mode and return pagestyle to "headings"
+\end{landscape}
+\pagestyle{headings}
+
+\end{document}
