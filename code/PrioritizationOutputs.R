@@ -7,8 +7,9 @@ tallies <- tallyScores()
 tallies_long <- talliesLong(tallies)
 
 
+
 # Summarize the projects by status, writing files to disk as .csv and .tex
-projects_by_status <- responseSummary()
+projects_by_status <- ddply(.data=dashView(), .(Status), summarize, Total=length(Status))
 print(xtable(projects_by_status),
       file="./report/tables/projects_by_status.tex",
       include.rownames=FALSE,
@@ -16,14 +17,25 @@ print(xtable(projects_by_status),
       only.contents=TRUE)
 write.csv(projects_by_status, "./report/tables/projects_by_status.csv")
 
+
+
 # Summarize projects by jurisdiction, ditto csv and tex
-projects_by_jurisdiction <- jurisdictionSummary()
+projects_by_jurisdiction <- ddply(.data=dashView(),
+                                  .(Jurisdiction),
+                                  summarize,
+                                  Completed=length(Status[Status == "Reviewed" | Status == "Submitted"]),
+                                  Projects=length(Status))
+# sort
+projects_by_jurisdiction <- projects_by_jurisdiction[with(projects_by_jurisdiction,
+                                                          order(-Completed, -Projects, Jurisdiction)), ]
+# export
 print(xtable(projects_by_jurisdiction),
       file="./report/tables/projects_by_jurisdiction.tex",
       include.rownames=FALSE,
       booktabs=TRUE,
       only.contents=TRUE)
 write.csv(projects_by_jurisdiction, "./report/tables/projects_by_jurisdiction.csv")
+
 
 
 ### Plots
@@ -37,6 +49,7 @@ distribution_by_score <- ggplot(tallies[! is.na(tallies$Category),],
 
 ggsave(filename="./report/figures/distribution_by_score.pdf",
        plot=distribution_by_score)
+
 
 # Projects by score and number of categories in which points were won
 # Note: this is a silly plot and should not be used

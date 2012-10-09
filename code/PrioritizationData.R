@@ -38,7 +38,7 @@ sig_funded <- c(4172, 4171, 4170, 4169, 2834, 1885, 2883, 3418,
 
 # Question IDs associated with our scorecards as opposed to something else.
 # Question IDs are defined in project DB
-scorecard.qs <- c(96, 97, 98, 110, 111, 113,
+scorecard_qs <- c(96, 97, 98, 110, 111, 113,
                   69, 70, 71, 72, 73, 74, 114,
                   66, 67, 68, 106, 107,
                   90, 91, 92, 117, 118, 120,
@@ -49,13 +49,11 @@ scorecard.qs <- c(96, 97, 98, 110, 111, 113,
                   75, 76, 77, 78)
 
 
-
-
-
 #### Summary functions ####
 # Some summary functions
 
 # Simply return the pre-existing "DashView" DB view
+# Used for some quick summaries
 dashView <- function() {
   dash.view <- sqlQuery(dbhandle,
                         'SELECT D.*, A.strName AS "Name"
@@ -68,35 +66,16 @@ dashView <- function() {
   # Subset out the significantly funded projects
   dash.view <- dash.view[! dash.view$mtpid %in% sig_funded, ]
   
-  return(dash.view)
-}
-
-responseSummary <- function() {
-  # Summarize responses to sponsor form by project status
-  dash.view <- dashView()
-  response.summary <- ddply(dash.view, .(Status=status), summarize, Total=length(status))
-  return(response.summary)
-}
-
-jurisdictionSummary <- function() {
-  dash.view <- dashView()
   # Only grab a few of the fields that we need
   dash.view <- dash.view[, c("Name", "mtpid", "Basics 2", "status")]
   names(dash.view) <- c("Jurisdiction", "MTPID", "Project", "Status")
+  
   # Convert NA to "Agency not Identified"
   dash.view$Jurisdiction[is.na(dash.view$Jurisdiction)] <- "Agency not Identified"
   
-  # Summarize projects by status and jurisdiction
-  dash.view <- ddply(dash.view, .(Jurisdiction), summarize,
-                     Completed=length(Status[Status == "Reviewed" | Status == "Submitted"]),
-                     Projects=length(Status))
-
-  # Sort them by status, then name
-  dash.view <- dash.view[with(dash.view, order(-Completed, -Projects, Jurisdiction)), ]
-
-
   return(dash.view)
 }
+
 
 
 # Read in the dataset for real
@@ -148,11 +127,10 @@ questionList <- function() {
                 INNER JOIN Answers A
                 ON Q.ID=A.QuestionID')
   
-
+  # Use our hardcoded scorecard questions list to filter out non-scorecard questions.
+  q <- q[q$QuestionID %in% scorecard_qs, ]
   
-  q <- q[q$QuestionID %in% scorecard.qs, ]
-  
-  # merge answer values; should be done in SQL at DB level
+  # merge answer values; should be done in SQL at DB level, but we don't have Qs in db
   q <- merge(x=q, y=answerValues(), by="AnswerID")
   q <- merge(x=q, y=scorecardMembership(), by="QuestionID")
   
@@ -219,18 +197,18 @@ mutexResponses <- function() {
 tallyScores <- function() {
   m <- mutexResponses()
   # Generate totals by card
-  m.by.card <- ddply(m, .(ProjectID,  Scorecard), summarize,
+  m.by.card <- ddply(m, .(MTPID,  Scorecard), summarize,
                      Score = sum(Values, na.rm=TRUE))
   
   # In how many scorecards did each project receive points
-  m.num.card <- ddply(m.by.card, .(ProjectID), summarize,
+  m.num.card <- ddply(m.by.card, .(MTPID), summarize,
                       NumCats=length(na.exclude(Score[Score > 0])))
   
   # Cast the data into a wide format
-  m.by.card <- dcast(m.by.card, ProjectID ~ Scorecard, value = "Score")
+  m.by.card <- dcast(m.by.card, MTPID ~ Scorecard, value = "Score")
   
   # Generate total score by project
-  m.by.proj <- ddply(m, .(ProjectID), summarize,
+  m.by.proj <- ddply(m, .(MTPID), summarize,
                      TotalScore=sum(Values, na.rm=TRUE),
                      Status=unique(Status),
                      Category=unique(Category))
@@ -239,10 +217,10 @@ tallyScores <- function() {
   
   
   # merge the summaries and return
-  m.merge <- merge(x=m.by.card, y=m.by.proj, by="ProjectID")
+  m.merge <- merge(x=m.by.card, y=m.by.proj, by="MTPID")
   
   # And now merge the number of scorecards data
-  m.merge <- merge(x=m.merge, y=m.num.card, by="ProjectID")
+  m.merge <- merge(x=m.merge, y=m.num.card, by="MTPID")
   
   # Only return submitted or reviewed projects
   m.merge <- m.merge[m.merge$Status != "In Progress", ]
