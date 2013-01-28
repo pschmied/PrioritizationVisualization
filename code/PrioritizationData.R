@@ -4,6 +4,8 @@ library(plyr)
 library(xtable)
 library(reshape2)
 library(car)
+library(gtools)
+library(scales)
 
 #### Database setup ####
 
@@ -20,143 +22,58 @@ dbhandle <- odbcDriverConnect('driver={SQL Server};server=sql2008\\psrcsql;datab
 #### Global variables ####
 ## Except for results, these should all really live in the DB
 
-# Kimberly S. sent along this list of projects that are significantly funded
-# I believe these are all MTPIDs
-sig_funded <- c(4172, 4171, 4170, 4169, 2834, 1885, 2883, 3418,
-                2313,2844, 3610, 2502, 2502, 3429, 547, 1879,
-                3364, 4127, 2892, 2851, 2894, 2899, 2900, 2689,
-                3609, 4263, 1956, 4160, 500, 511, 1432, 2847,
-                122, 3612, 2902, 958, 610, 5538, 4025, 4609,
-                2668, 5146, 5166, 5168, 5279, 5448, 4121, 1299,
-                5537, 4272, 4002, 1239, 2890, 2812, 792, 1200,
-                265, 3643, 3601, 2880, 116, 113, 1224, 1308,
-                5509, 2905, 4277, 3569, 2823, 2805, 1950, 4276,
-                4050, 4047, 2493, 2492, 3550, 5543, 5343, 4355,
-                4354, 4353, 4352, 4341, 4340, 4311, 4281, 4280,
-                4267, 4252, 4251, 4189, 4159, 4099, 3527, 2910,
-                2882, 2567, 1714, 1661, 1658, 1652, 1644, 1627)
 
-# Question IDs associated with our scorecards as opposed to something else.
-# Question IDs are defined in project DB
-scorecard_qs <- c(96, 97, 98, 110, 111, 113,
-                  69, 70, 71, 72, 73, 74, 114,
-                  66, 67, 68, 106, 107,
-                  90, 91, 92, 117, 118, 120,
-                  99, 101, 102, 121, 122, 134, 136,
-                  89, 141,
-                  93, 94, 95, 148, 150, 151, 152,
-                  59, 60, 61, 62, 63, 64, 65, 159,
-                  75, 76, 77, 78)
-
-
-#### Summary functions ####
-# Some summary functions
-
-# Simply return the pre-existing "DashView" DB view
-# Used for some quick summaries
-dashView <- function() {
-  dash.view <- sqlQuery(dbhandle,
-                        'SELECT D.*, A.strName AS "Name"
-                          FROM DashView D
-                        
-                        LEFT JOIN agencies A
-                        ON D.AgencyID = A.ID')
-  dash.view$status[is.na(dash.view$status)] <- "In Progress"
-  
-  # Subset out the significantly funded projects
-  dash.view <- dash.view[! dash.view$mtpid %in% sig_funded, ]
-  
-  # Only grab a few of the fields that we need
-  dash.view <- dash.view[, c("Name", "mtpid", "Basics 2", "status")]
-  names(dash.view) <- c("Jurisdiction", "MTPID", "Project", "Status")
-  
-  # Convert NA to "Agency not Identified"
-  dash.view$Jurisdiction[is.na(dash.view$Jurisdiction)] <- "Agency not Identified"
-  
-  return(dash.view)
-}
-
-
-
-# Read in the dataset for real
-readAndMerge <- function () {
+allResponses <- function () {
   m <- sqlQuery(dbhandle,
-                'SELECT D.MTPID,
-                        R.ProjectID, R.QuestionID,
-                        Q.Text AS "Question",
-                        A.ID AS AnswerID, A.Text AS "Answer",
-                        D.status as "Status",
-                        C.category as "Category"
-
-                      FROM Responses R
+                'SELECT * FROM all_responses
+                WHERE MTPID IS NOT NULL
+                AND Prioritize = \'TRUE\'')
   
-                      LEFT JOIN Answers A
-                        ON R.AnswerID = A.ID
+  # Recode Category labels
+  m$Category <- as.character(m$Category)
+  m$Category[m$Category == "Transit & Ferry Related"] <- "Transit"
+  m$Category[m$Category == "Roadway Related - State Route"] <- "Highways"
+  m$Category[m$Category == "Roadway Related - Arterial"] <- "Arterials"
+  m$Category[m$Category == "Bicycle/Pedestrian"] <- "Bike/Ped"
+  m$Category <- as.factor(m$Category)
   
-                      LEFT JOIN Questions Q
-                        ON Q.ID = A.QuestionID
-
-                      LEFT JOIN DashView D
-                        ON D.id = R.ProjectID
-
-                      LEFT JOIN project_category C
-                        ON C.mtpid = D.MTPID
+  # Recode NA submission statuses; results in warning if there are none
+  #m$Submission[is.na(m$Submission)] <- "In Progress"
   
-                      ORDER BY C.Category, R.ProjectID, R.QuestionID;'
-  )
+  # Pull year as an added field
+  m1 <- m[!is.na(m$QuestionID) & m$QuestionID == 29, ]
+  m1 <- subset(m1, select=c("MTPID", "AnswerFreeText"))
+  names(m1) <- c("MTPID", "Completed")
+  m <- merge(m, m1, by=intersect(names(m), names(m1)))
   
-  #Filter NA projects
-  m <- m[! is.na(m$ProjectID),]
-  q <- questionList()
-  m <- merge(m, q, by=intersect(names(m), names(q)))
+  # Clean description of one nasty unicode character
+  m$Description <- gsub(" ", "", m$Description)
   
-  # Filter out significantly funded projects
-  m <- m[! m$MTPID %in% sig_funded, ]
+  m <- dedupe(m)
+  
+  m <- mutexPoints(m)
   
   return(m)
 }
 
 
-questionList <- function() {
-  q <- sqlQuery(dbhandle,
-                'SELECT Q.Text AS "Question",
-                  Q.ID as "QuestionID",
-                A.ID AS AnswerID,
-                A.Text AS "Answer"
-                FROM Questions Q
-                INNER JOIN Answers A
-                ON Q.ID=A.QuestionID')
-  
-  # Use our hardcoded scorecard questions list to filter out non-scorecard questions.
-  q <- q[q$QuestionID %in% scorecard_qs, ]
-  
-  # merge answer values; should be done in SQL at DB level, but we don't have Qs in db
-  q <- merge(x=q, y=answerValues(), by="AnswerID")
-  q <- merge(x=q, y=scorecardMembership(), by="QuestionID")
-  
-  return(q)
-}
-
-# Sponsor form app doesn't know which questions belong to which scorecard,
-# so we had to manually figure these out.
-scorecardMembership <- function() {
-  scorecards <- read.csv(file="./data/Scorecards.csv")
-  return(scorecards)
-}
-
-# Sponsor form app doesn't know the points value for any given answer,
-# so we had to also manually figure these out (FYI, a royal pain)
-answerValues <- function() {
-  answer.values <- read.csv(file="./data/AnswerValues.csv")
-  return(answer.values)
+# Deduplication function for edge case where we have multiple year responses
+# Naively take last (maybe latest) response
+dedupe <- function(responses) {
+  m1 <- unique(responses[ ,1:16])
+  m2 <- subset(responses, select=c("MTPID", "QuestionID", "Completed"))
+  m2 <- ddply(.data=m2, .(MTPID, QuestionID), summarize, Completed=tail(Completed, n=1))
+  m <- merge(m1, m2, by=intersect(names(m1), names(m2)))
+  return(m)
 }
 
 
 # The makers of our sponsor form also failed to make questions mutually exclusive
 # So, we have to do this manually as well (FYI an extra pain).
-mutexResponses <- function() {
-  m <- readAndMerge()
+mutexPoints <- function(responses) {
+  m <- responses
   m.names <- names(m)
+  
   
   # Ordinarily, questions are independent
   m$MutexGroup <- m$QuestionID
@@ -173,18 +90,23 @@ mutexResponses <- function() {
   m$MutexGroup[m$QuestionID %in% c(62, 63)] <- "m9"
   m$MutexGroup[m$QuestionID %in% c(66, 67)] <- "m9"
   
+  # Responses including questions that are in a mutex group (speeds thing up)
+  mq <- m[grep("^m[0-9]", m$MutexGroup), ]
+  mq <- mq[! is.na(mq$Points), ]
+
+  
   # Get the highest value answer for each group of questions, by project
-  d <- ddply(m, .(ProjectID, MutexGroup), summarize,
-             Max=max(Values, na.rm=TRUE))
+  d <- ddply(mq, .(MTPID, MutexGroup), summarize,
+             Max=max(Points, na.rm=TRUE))
   
 
   # Merge the data frames
-  m <- merge(x=d, y=m, by=c("ProjectID", "MutexGroup"))
+  m <- merge(x=d, y=m, by=c("MTPID", "MutexGroup"), all.y=TRUE)
   
   
   # If a response was not zero or was less than the max, drop the response
   # This condition means that someone didn't choose between mutually exclusive options
-  m <- m[m$Values == 0 | m$Values == m$Max, ]
+  m$Points[! is.na(m$Max) & m$Points < m$Max ] <- 0
   
   # Only select the original set of names
   m <- subset(m, select=m.names)
@@ -195,10 +117,12 @@ mutexResponses <- function() {
 
 
 tallyScores <- function() {
-  m <- mutexResponses()
+  m <- allResponses()
+  m <- m[! is.na(m$Scorecard), ] # Remove NA scorecards
+  
   # Generate totals by card
   m.by.card <- ddply(m, .(MTPID,  Scorecard), summarize,
-                     Score = sum(Values, na.rm=TRUE))
+                     Score = sum(Points, na.rm=TRUE))
   
   # In how many scorecards did each project receive points
   m.num.card <- ddply(m.by.card, .(MTPID), summarize,
@@ -209,12 +133,14 @@ tallyScores <- function() {
   
   # Generate total score by project
   m.by.proj <- ddply(m, .(MTPID), summarize,
-                     TotalScore=sum(Values, na.rm=TRUE),
-                     Status=unique(Status),
-                     Category=unique(Category))
-  # Homogenize the status field
-  m.by.proj$Status[is.na(m.by.proj$Status)] <- "In Progress"
-  
+                     TotalScore=sum(Points, na.rm=TRUE),
+                     Description=unique(Description),
+                     Submission=unique(Submission),
+                     Category=unique(Category),
+                     Cost=unique(Cost),
+                     Section=unique(Section),
+                     Completed=Completed[1],
+                     Jurisdiction=Jurisdiction[1])
   
   # merge the summaries and return
   m.merge <- merge(x=m.by.card, y=m.by.proj, by="MTPID")
@@ -222,9 +148,8 @@ tallyScores <- function() {
   # And now merge the number of scorecards data
   m.merge <- merge(x=m.merge, y=m.num.card, by="MTPID")
   
-  # Only return submitted or reviewed projects
-  m.merge <- m.merge[m.merge$Status != "In Progress", ]
-  m.merge$Status <- NULL
+  # Sort by total score
+  m.merge <- m.merge[with(m.merge, order(-TotalScore)), ]
   
   return(m.merge)
 }
@@ -232,20 +157,53 @@ tallyScores <- function() {
 
 # Function creates a long-formatted table of tallies
 talliesLong <- function(t) {
-  t <- melt(t[, 2:10])
-  names(t) <- c("Scorecard", "Score")
+  t <- melt(t, measure.vars=c("Air Quality", "Freight", "Jobs", "Multi-Modal",
+                              "Puget Sound Land and Water", "Safety and System Security",
+                              "Social Equity and Access to Opportunity",
+                              "Support for Centers", "Travel"))
+  names(t)[names(t)=="variable"] <- "Scorecard"
+  names(t)[names(t)=="value"] <- "Score"
   return(t)
 }
 
 # Function to z-score and quantile cut tallies
 talliesZScore <- function(t) {
+  # Take a table of tallies and turn it into a ZScored table with LaTeX control sequences
   labels <- c("\\HVLow", "\\HLow", "\\HMed", "\\HHi", "\\HVHi")
-  for(x in 2:11) {
+  for(x in 2:10) {
     t[,x] <- cut(scale(t[,x]), 5, labels=labels)
   }
-
+  
+  t <- subset(t, select = c("MTPID", "Jurisdiction", "Description", "Air Quality", "Freight", "Jobs", "Multi-Modal",
+                   "Puget Sound Land and Water", "Safety and System Security",
+                   "Social Equity and Access to Opportunity",
+                   "Support for Centers", "Travel", "TotalScore", "Cost", "Category", "Section"))
+  
   return(t)
 }
+
+tallies5Level <- function(t) {
+  # Take a table of tallies and turn it into a 5-leveled table with LaTeX control sequences
+  labels <- c("\\HVLow", "\\HLow", "\\HMed", "\\HHi", "\\HVHi")
+  
+  for(x in 2:10) {
+    t[,x] <- recode(t[,x], "0:2='\\\\HVLow'; 3:4='\\\\HLow'; 5:6='\\\\HMed'; 7:8='\\\\HHi'; 9:10='\\\\HVHi'")
+  }
+  
+  # re-sort by totalscore
+  #t <- t[with(t, order(-TotalScore)), ]
+  
+  t$TotalScore <- recode(t$TotalScore, "0:18='\\\\HVLow'; 19:37='\\\\HLow'; 38:55='\\\\HMed'; 56:73='\\\\HHi'; 74:100='\\\\HVHi'")
+  
+  t <- subset(t, select = c("MTPID", "Jurisdiction", "Description", "Air Quality", "Freight", "Jobs", "Multi-Modal",
+                            "Puget Sound Land and Water", "Safety and System Security",
+                            "Social Equity and Access to Opportunity",
+                            "Support for Centers", "Travel", "TotalScore", "Cost", "Category", "Section"))
+  
+  return(t)
+}
+
+# Write a table of all responses
 
 #odbcCloseAll()
 

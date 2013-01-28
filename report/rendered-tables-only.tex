@@ -1,0 +1,348 @@
+%!TEX TS-program = lualatex
+%!TEX encoding = UTF-8 Unicode
+%! program = lualatex
+
+%%%%% DOCUMENT SETUP %%%%%
+% Document class derives from "memoir" class
+%\documentclass[10pt, letterpaper, final, twoside, onecolumn, article]{memoir}% For most reports; chapters look like section headers
+\documentclass[10pt, legalpaper, final, oneside, onecolumn, landscape]{memoir}% For book-like reports with separate chapters
+
+% Useful packages
+%\usepackage{psrc}
+\usepackage{lipsum}
+\usepackage{soul}
+\usepackage{datetime}
+%\usepackage{pgfplots}
+\usepackage{pdflscape} % for landscape pages
+\usepackage{longtable}
+%\usepackage[notes,strict,backend=bibtex8,babel=other,bibencoding=inputenc,doi=false,isbn=false,url=false]{biblatex-chicago}% Chicago bibliography
+
+\usepackage{tikz}
+\usepackage{tgheros}
+\usepackage{tgpagella}
+
+
+\setlrmarginsandblock{.5in}{.5in}{*}
+\setulmarginsandblock{.5in}{.5in}{*}
+\checkandfixthelayout[nearest]
+
+\setsecnumdepth{chapter}
+
+\chapterstyle{hangnum}
+
+% Smaller font for captions
+\captionnamefont{\small\bfseries}
+\captiontitlefont{\small\bfseries}
+
+% All captions are left-justified
+\captionstyle[\centering]{\raggedright}
+
+\definecolor{c231f20}{RGB}{35,31,32}
+\definecolor{c0083a9}{RGB}{0,131,169}
+\definecolor{cffffff}{RGB}{255,255,255}
+
+
+
+
+
+% Define our harvey balls
+\input{harveyballs.tex}
+
+
+
+
+\title{Rendered tables}
+\author{}
+%\date{September, 2012}
+
+%\bibliography{PSRC} %Wouldn't a curated, agency-wide bibliography database be swell?
+
+\begin{document}
+%\mainmatter
+%\maketitle
+
+%%%%% BEGIN DOCUMENT %%%%%
+
+
+%\chapterstyle{ell}
+
+
+%%%% Enter landscape mode to make room for wide tables
+\pagestyle{plain}
+
+\chapter{Z-Scored Tables}
+%Symbols reflect z-scored project totals
+
+\clearpage
+%%%% Non-motorized projects Z
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+
+\caption{Non-motorized projects} \\
+
+\toprule
+
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+\endfirsthead
+
+
+\caption{Non-motorized projects continued\ldots} \\
+\toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+
+\endhead
+
+\bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+\endfoot
+
+\bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+\endlastfoot
+
+\input{tables/tallies_z_nonmotor.tex}
+
+
+
+\end{longtable}}
+
+ 
+ %%%%%% Transit
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{Transit projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ 
+ \caption{Transit projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endfoot
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endlastfoot
+ 
+ \input{tables/tallies_z_transit.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ 
+ %%%%%% Arterial
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{Arterial projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ \caption{Arterial projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endfoot
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endlastfoot
+ 
+ \input{tables/tallies_z_arterial.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ %%%%%% State routes
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{State Routes projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ \caption{State Routes projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endfoot
+ 
+ \bottomrule
+\multicolumn{15}{r}{\HVHi = Largest benefit, \HHi = Larger benefit, \HMed = Average benefit, \HLow = Smaller benefit, \HVLow = Smallest benefit}
+ \endlastfoot
+ 
+ \input{tables/tallies_z_stateroute.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ 
+ 
+ %%%%
+ %%%% Numerically scored tables
+ %%%%
+ 
+ \chapter{Absolute Point Values Tables}
+ 
+ 
+ 
+ \clearpage
+ %%%% Non-motorized projects Z
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{Non-motorized projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ \caption{Non-motorized projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endfoot
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endlastfoot
+ 
+ \input{tables/tallies_5_nonmotor.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ %%%%%% Transit
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{Transit projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ \caption{Transit projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endfoot
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endlastfoot
+ 
+ \input{tables/tallies_5_transit.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ 
+ %%%%%% Arterial
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{Arterial projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ 
+ \caption{Arterial projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endfoot
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endlastfoot
+ 
+ \input{tables/tallies_5_arterial.tex}
+ 
+ \end{longtable}}
+ 
+ 
+ %%%%%% State routes
+ \clearpage
+ 
+{\scriptsize
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
+ 
+ \caption{State Routes projects} \\
+ 
+ \toprule
+ 
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ \endfirsthead
+ 
+ 
+ \caption{State Routes projects continued\ldots} \\
+ \toprule
+ID	&	Sponsor	&	Description  & Air Quality & Freight & Jobs & Multi-Modal & Puget Sound Land and Water & Safety and System Security & Social Equity and Opportunity & Support for Centers & Travel & Total Score & Cost (millions) & Plan Section\\ \midrule
+ 
+ \endhead
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endfoot
+ 
+ \bottomrule
+ \multicolumn{14}{r}{Individual Scorecards: \HVHi = 9-10 points, \HHi = 7-8 points, \HMed = 5-6 points, \HLow = 3-4 points, \HVLow = 0-2 points \hspace{2pc} Total Scores: \HVHi = 74-90 points, \HHi = 56-73 points, \HMed = 38-55 points, \HLow = 19-37 points, \HVLow = 0-18 points}
+ \endlastfoot
+ 
+ \input{tables/tallies_5_stateroute.tex}
+ 
+ \end{longtable}}
+ 
+ 
+\end{document}
