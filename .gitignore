@@ -28,3 +28,4 @@ my-connection-string.R
 *.mtc0
 .Rproj.user
 .Rhistory
+.dropbox

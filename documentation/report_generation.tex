@@ -1,0 +1,99 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+%! program = pdflatex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                %
+%   A sample report using the psrc.sty package   %
+%                                                %
+%                                                %
+%          All PSRC LaTeX queries to:            %
+%           pschmiedeskamp@psrc.org              %
+%                                                %
+%                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%% DOCUMENT SETUP %%%%%
+% Document class derives from "memoir" class
+\documentclass[10pt, letterpaper, final, twoside, onecolumn, article]{memoir}% For most reports; chapters look like section headers
+%\documentclass[10pt, letterpaper, final, twoside, onecolumn]{memoir}% For book-like reports with separate chapters
+
+% Useful packages
+\usepackage{psrc}
+\usepackage{lipsum}
+\usepackage{soul}
+%\usepackage[notes,strict,backend=bibtex8,babel=other,bibencoding=inputenc,doi=false,isbn=false,url=false]{biblatex-chicago}% Chicago bibliography
+
+
+\title{Prioritization Report Generation}
+%\author{Ronald Reportwriter}
+%\date{June 2015}
+
+%\bibliography{PSRC} %Wouldn't a curated, agency-wide bibliography database be swell?
+
+\begin{document}
+\maketitle
+
+%%%%% BEGIN DOCUMENT %%%%%
+
+%\frontmatter
+%\tableofcontents* %Starred version omits the section from the ToC
+%\clearpage
+%\listoffigures
+%\clearpage
+%\listoftables
+%\clearpage
+
+
+\chapter{Background \& Tool Description}
+This document describes the reporting software developed to summarize data collected via the T2040 project prioritization sponsor form. The software was originally written to:
+\begin{itemize}
+\item Extract data from the database associated with the sponsor form website
+\item Aggregate and summarize extracted data
+\item Produce graphics, tables, and other visualizations
+\item Generate a typeset text report with embedded figures and tables
+\end{itemize}
+
+Over time, both the requested visual products as well as the format of the report have changed. In particular, the requirement to generate a report has been dropped in favor of typesetting tables for manual placement into reports, or for standalone printing.
+
+The software is written in a combination of three programming languages: R for numerical processing and generation of figures, SQL (embedded inside R) to extract data from the database, and LaTeX for any finalized typesetting.
+
+\chapter{Installation \& Prerequisites}
+To generate reports several pieces of software must be installed. In addition, the user must be able to connect to and read data from the sponsor form database. Software that must be installed includes:
+\begin{description}
+\item[R programming language:] Download and install the latest version from http://www.r-project.org/. I recommend selecting the CRAN mirror located at Fred Hutchison Cancer Research Center, as it will download most quickly from there.
+\item[RStudio:] This is technically not required, but makes working from R much simpler http://www.rstudio.com/
+\item[MiKTeX:] This is a comprehensive LaTeX distribution for Windows. Download "basic" distribution from http://www.rstudio.com/.
+\item[GitHub:] A github client and account is needed to make changes to the tool. This can be accomplished at https://github.com/.
+\end{description}
+
+In once installed, you will need to install several packages in R including:
+\begin{itemize}
+\item RODBC
+\item ggplot2
+\item plyr
+\item xtable
+\item reshape2
+\item car
+\item gtools
+\item scales
+\end{itemize}
+
+Finally, you will need the project files themselves. These have been shared with Alex via Dropbox. In addition, I have created a public Github repository, which can be forked from https://github.com/pschmied/PrioritizationVisualization. Changes to code should be made within the hospices of Git.
+
+\chapter{Report Outputs}
+Report products are generated in two steps. In general, everything except typeset products (e.g. harvey balls tables, and example LaTeX report) are created from R. The typeset products are produced via LaTeX, and are dependent on the outputs of R. Both steps of a complete re-build can be accomplished from within RStudio.
+
+The first step to rebuilding a report is to recreate the data and visualization outputs from R. This can be accomplished by opening the RStudio project file, and ``sourcing" the PrioritizationOutputs.R file. This will place figures and tables inside the appropriate subfolders within the ``report" folder. This step takes several minutes and a great deal of system memory. Memory-starved computers may not be able to run the code.
+
+To re-render typeset products such as the harvey balls tables, you must compile the corresponding .tex file (e.g. rendered-tables-only.tex). Changes in the rendered tables \emph{must be accompanied by corresponding changes in the R source code}. In addition, compilation may fail if the .aux, .log, and .pdf files are not deleted.
+
+\chapter{Modifications}
+Changing the outputs will require some moderate understanding of R, LaTeX, or possibly both. In addition, I highly recommend tracking changes to the source code in a Github repository forked from my original.
+
+Changes to the database (table names, column names, data types, etc.) can also cause the report generation to fail. For this reason, I recommend maintaining the database schema as close to its current state as possible.
+
+
+\end{document}
