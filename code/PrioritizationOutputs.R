@@ -143,34 +143,21 @@ write.csv(tallies, "./report/tables/raw_tallies.csv")
 column_order <-   c("Category", "MTPID", "Jurisdiction", "Description", "Air Quality", "Freight", "Jobs", "Multi-Modal", "Puget Sound Land and Water", "Safety and System Security", "Social Equity and Access to Opportunity", "Support for Centers", "Travel", "TotalScore", "Cost", "Section")
 
 # Consumer reports tables
-tallies_z <- talliesZScore(tallies)
-tallies_z <- subset(tallies_z, select=column_order) #reorder columns and subset
-write.csv(tallies_z, "./report/tables/tallies_z.csv")
-
 tallies_5 <- tallies5Level(tallies)
 tallies_5 <- subset(tallies_5, select=column_order) #reorder columns and subset
 write.csv(tallies_5, "./report/tables/tallies_5.csv")
 
 # Reformat cost column for pretty printing
-tallies_z$Cost <- round(tallies_z$Cost / 1000000, 2)
 tallies_5$Cost <- round(tallies_5$Cost / 1000000, 2)
 
 # Bad index subsetting, but I'm lazy and it works. 2:12 == MTPID through scorecard
-tallies_z_nonmotor <- tallies_z[tallies_z$Category == "Bike/Ped", 2:16]
-tallies_z_arterial <- tallies_z[tallies_z$Category == "Arterials", 2:16]
-tallies_z_stateroute <- tallies_z[tallies_z$Category == "Highways", 2:16]
-tallies_z_transit <- tallies_z[tallies_z$Category == "Transit", 2:16]
-tallies_z_unknown <- tallies_z[is.na(tallies_z$Category), 2:16]
-
 tallies_5_nonmotor <- tallies_5[tallies_5$Category == "Bike/Ped", 2:16]
 tallies_5_arterial <- tallies_5[tallies_5$Category == "Arterials", 2:16]
 tallies_5_stateroute <- tallies_5[tallies_5$Category == "Highways", 2:16]
 tallies_5_transit <- tallies_5[tallies_5$Category == "Transit", 2:16]
 tallies_5_unknown <- tallies_5[is.na(tallies_5$Category), 2:16]
 
-table_names <- c("tallies_z_nonmotor", "tallies_z_arterial",
-                 "tallies_z_stateroute", "tallies_z_transit",
-                 "tallies_z_unknown", "tallies_5_nonmotor", "tallies_5_arterial",
+table_names <- c("tallies_5_nonmotor", "tallies_5_arterial",
                  "tallies_5_stateroute", "tallies_5_transit",
                  "tallies_5_unknown")
 

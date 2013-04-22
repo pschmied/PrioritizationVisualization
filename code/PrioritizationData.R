@@ -37,6 +37,17 @@ allResponses <- function () {
   m$Category[m$Category == "Bicycle/Pedestrian"] <- "Bike/Ped"
   m$Category <- as.factor(m$Category)
   
+  # Recode Section labels
+  m$Section <- as.character(m$Section)
+  m$Section[m$Section == "Conditionally Approved"] <- as.factor("Conditional")
+  m$Section <- as.factor(m$Section)
+  
+  # Recode Sponsor labels
+  m$Jurisdiction <- as.character(m$Jurisdiction)
+  m$Jurisdiction <- gsub("County", "Co.", m$Jurisdiction)
+  m$Jurisdiction <- as.factor(m$Jurisdiction)
+  
+  
   # Recode NA submission statuses; results in warning if there are none
   #m$Submission[is.na(m$Submission)] <- "In Progress"
   
@@ -166,21 +177,6 @@ talliesLong <- function(t) {
   return(t)
 }
 
-# Function to z-score and quantile cut tallies
-talliesZScore <- function(t) {
-  # Take a table of tallies and turn it into a ZScored table with LaTeX control sequences
-  labels <- c("\\HVLow", "\\HLow", "\\HMed", "\\HHi", "\\HVHi")
-  for(x in 2:10) {
-    t[,x] <- cut(scale(t[,x]), 5, labels=labels)
-  }
-  
-  t <- subset(t, select = c("MTPID", "Jurisdiction", "Description", "Air Quality", "Freight", "Jobs", "Multi-Modal",
-                   "Puget Sound Land and Water", "Safety and System Security",
-                   "Social Equity and Access to Opportunity",
-                   "Support for Centers", "Travel", "TotalScore", "Cost", "Category", "Section"))
-  
-  return(t)
-}
 
 tallies5Level <- function(t) {
   # Take a table of tallies and turn it into a 5-leveled table with LaTeX control sequences
@@ -193,7 +189,7 @@ tallies5Level <- function(t) {
   # re-sort by totalscore
   #t <- t[with(t, order(-TotalScore)), ]
   
-  t$TotalScore <- recode(t$TotalScore, "0:18='\\\\HVLow'; 19:37='\\\\HLow'; 38:55='\\\\HMed'; 56:73='\\\\HHi'; 74:100='\\\\HVHi'")
+  #t$TotalScore <- recode(t$TotalScore, "0:18='\\\\HVLow'; 19:37='\\\\HLow'; 38:55='\\\\HMed'; 56:73='\\\\HHi'; 74:100='\\\\HVHi'")
   
   t <- subset(t, select = c("MTPID", "Jurisdiction", "Description", "Air Quality", "Freight", "Jobs", "Multi-Modal",
                             "Puget Sound Land and Water", "Safety and System Security",
