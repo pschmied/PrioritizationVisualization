@@ -150,6 +150,13 @@ write.csv(tallies_5, "./report/tables/tallies_5.csv")
 # Reformat cost column for pretty printing
 tallies_5$Cost <- round(tallies_5$Cost / 1000000, 2)
 
+# Reformat score column to drop decimals / avoid Terminator human casualty count problem
+# Problem is in xtable, so being lazy and converting to character
+tallies_5$TotalScore <- as.character(tallies_5$TotalScore)
+
+# Reformat description to enable dot-filling to end of the line
+# tallies_5$Description <- paste(tallies_5$Description, "\\dotfill", sep="")
+
 # Bad index subsetting, but I'm lazy and it works. 2:12 == MTPID through scorecard
 tallies_5_nonmotor <- tallies_5[tallies_5$Category == "Bike/Ped", 2:16]
 tallies_5_arterial <- tallies_5[tallies_5$Category == "Arterials", 2:16]

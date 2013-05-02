@@ -49,6 +49,8 @@
 \input{harveyballs.tex}
 
 
+% Create a date command
+\newcommand{\thedate}{\today}
 
 
 \title{Rendered tables}
@@ -78,8 +80,13 @@
  % Adjust table row spacing as needed
  \renewcommand{\arraystretch}{3}
  
+ % Custom footer
+ \makeevenfoot{plain}{\today}{}{\thepage}
+ \makeoddfoot{plain}{\today}{}{\thepage}
+ 
  \clearpage
- %%%% Non-motorized projects Z
+ %Non-motorized
+
 {\scriptsize
 \begin{longtable}{>{\raggedright\arraybackslash}p{1.2pc}>{\raggedright\arraybackslash}p{5.5pc}>{\raggedright\arraybackslash}p{30.5pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.5pc}>{\raggedright\arraybackslash}p{2.2pc}>{\raggedright\arraybackslash}p{2.0pc}>{\raggedright\arraybackslash\bfseries}p{2.0pc}>{\raggedright\arraybackslash\bfseries}p{2.5pc}>{\raggedright\arraybackslash}p{4.3pc}}
  

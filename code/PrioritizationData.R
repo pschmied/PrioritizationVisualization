@@ -38,9 +38,9 @@ allResponses <- function () {
   m$Category <- as.factor(m$Category)
   
   # Recode Section labels
-  m$Section <- as.character(m$Section)
-  m$Section[m$Section == "Conditionally Approved"] <- as.factor("Conditional")
-  m$Section <- as.factor(m$Section)
+  # m$Section <- as.character(m$Section)
+  # m$Section[m$Section == "Conditionally Approved"] <- "Conditional"
+  # m$Section <- as.factor(m$Section)
   
   # Recode Sponsor labels
   m$Jurisdiction <- as.character(m$Jurisdiction)
@@ -99,10 +99,11 @@ mutexPoints <- function(responses) {
   m$MutexGroup[m$QuestionID %in% c(150, 151, 152)] <- "m7"
   m$MutexGroup[m$QuestionID %in% c(59, 60, 61)] <- "m8"
   m$MutexGroup[m$QuestionID %in% c(62, 63)] <- "m9"
-  m$MutexGroup[m$QuestionID %in% c(66, 67)] <- "m9"
+  m$MutexGroup[m$QuestionID %in% c(66, 67)] <- "m10"
+  m$MutexGroup[m$QuestionID %in% c(184, 185, 89)] <- "m11"
   
   # Responses including questions that are in a mutex group (speeds thing up)
-  mq <- m[grep("^m[0-9]", m$MutexGroup), ]
+  mq <- m[grep("^m[0-9]+", m$MutexGroup), ]
   mq <- mq[! is.na(mq$Points), ]
 
   
