@@ -1,6 +1,10 @@
 # Read in the R functions that query and digest our data
 source("./code/PrioritizationData.R")
 
+# Make outputs directories
+dir.create(file.path("./report", "tables"), showWarnings = FALSE)
+dir.create(file.path("./report", "figures"), showWarnings = FALSE)
+
 # Get our tallies
 tallies <- tallyScores()
 # Make a long-formatted version for easier summarization / visualization
